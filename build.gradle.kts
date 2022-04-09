@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "1.6.20"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "app.revanced"
@@ -16,6 +17,17 @@ repositories {
             // Linux: ~/.gradle/gradle.properties
             username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR") // DO NOT CHANGE!
             password = project.findProperty("gpr.key")  as String? ?: System.getenv("GITHUB_TOKEN") // DO NOT CHANGE!
+        }
+    }
+}
+
+tasks {
+    build {
+        dependsOn(shadowJar)
+    }
+    shadowJar {
+        manifest {
+            attributes(Pair("Main-Class", "app.revanced.cli.MainKt"))
         }
     }
 }
