@@ -8,7 +8,7 @@ version = "1.0-SNAPSHOT"
 repositories {
     mavenCentral()
     maven {
-        url = uri("https://maven.pkg.github.com/ReVancedTeam/revanced-patcher") // note the "r"!
+        url = uri("https://maven.pkg.github.com/ReVancedTeam/multidexlib2")
         credentials {
             // DO NOT set these variables in the project's gradle.properties.
             // Instead, you should set them in:
