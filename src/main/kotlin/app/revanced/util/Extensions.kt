@@ -41,7 +41,7 @@ internal fun Method.toStr() = SignatureGenerator.toJson(
 internal fun Iterable<Instruction>.parse(sw: StringBuilder) {
     val calc = InstructionCalculator(this)
     forEachIndexed { index, it ->
-        sw.append("${index.toString().padEnd(3, ' ')} ${it.opcode.name.padEnd(20, ' ')} | ").append(
+        sw.append("${index.toString().padEnd(3, ' ')} | ${it.opcode.name.padEnd(20, ' ')} | ").append(
             when (it) {
                 is Instruction10x -> ""
                 is Instruction10t -> "${index + calc.mapCodeAddressToRelativeIndex(it.codeOffset)}"

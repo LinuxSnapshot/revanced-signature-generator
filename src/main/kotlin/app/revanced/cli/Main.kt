@@ -23,7 +23,7 @@ fun main(args: Array<String>) {
                 if (!method.name.contains(methodName)) continue
                 if (method.implementation == null) continue
 
-                println("Method: ${method.definingClass}->${method.name}(${method.parameterTypes.joinToString("")})${method.returnType}.")
+                println("Method: ${method.definingClass}->${method.name}(${method.parameterTypes.joinToString("")})${method.returnType}\n")
 
                 // print out the instructions
                 val sw = StringBuilder()
