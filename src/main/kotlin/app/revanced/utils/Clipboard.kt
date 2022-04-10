@@ -1,4 +1,4 @@
-package app.revanced.util
+package app.revanced.utils
 
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection

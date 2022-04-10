@@ -1,6 +1,6 @@
 package app.revanced.signature
 
-import app.revanced.util.set
+import app.revanced.utils.set
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray

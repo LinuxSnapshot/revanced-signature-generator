@@ -1,8 +1,8 @@
 package app.revanced.cli
 
-import app.revanced.util.Clipboard
-import app.revanced.util.parse
-import app.revanced.util.toStr
+import app.revanced.utils.Clipboard
+import app.revanced.utils.parse
+import app.revanced.utils.toStr
 import lanchon.multidexlib2.BasicDexFileNamer
 import lanchon.multidexlib2.MultiDexIO
 import org.jf.dexlib2.Opcodes
@@ -23,7 +23,7 @@ fun main(args: Array<String>) {
                 if (!method.name.contains(methodName)) continue
                 if (method.implementation == null) continue
 
-                println("Method: ${method.definingClass}->${method.name}(${method.parameterTypes.joinToString("")})${method.returnType}\n")
+                println("Method (${method.implementation!!.registerCount} registers): ${method.definingClass}->${method.name}(${method.parameterTypes.joinToString("")})${method.returnType}\n")
 
                 // print out the instructions
                 val sw = StringBuilder()

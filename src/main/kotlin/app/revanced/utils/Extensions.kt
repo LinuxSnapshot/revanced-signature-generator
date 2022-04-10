@@ -1,4 +1,4 @@
-package app.revanced.util
+package app.revanced.utils
 
 import app.revanced.signature.MethodSignature
 import app.revanced.signature.SignatureGenerator
@@ -39,7 +39,7 @@ internal fun Method.toStr() = SignatureGenerator.toJson(
 )
 
 internal fun Iterable<Instruction>.parse(sw: StringBuilder) {
-    val calc = InstructionCalculator(this)
+    val calc = ControlFlowHelper(this)
     forEachIndexed { index, it ->
         sw.append("${index.toString().padEnd(3, ' ')} | ${it.opcode.name.padEnd(20, ' ')} | ").append(
             when (it) {
@@ -66,10 +66,10 @@ internal fun Iterable<Instruction>.parse(sw: StringBuilder) {
                 is Instruction31i -> "v${it.registerA},${it.narrowLiteral}"
                 is Instruction31t -> "v${it.registerA}, ${index + calc.mapCodeAddressToRelativeIndex(it.codeOffset)}"
                 is Instruction32x -> "v${it.registerA}, v${it.registerB}"
-                is Instruction35c -> "{ ${it.registerC}, v${it.registerD}, v${it.registerE}, v${it.registerF}, v${it.registerG} }, ${it.reference.toStr()}"
+                is Instruction35c -> "{ v${it.registerC}, v${it.registerD}, v${it.registerE}, v${it.registerF}, v${it.registerG} }, ${it.reference.toStr()}"
                 is Instruction35mi -> "v${it.registerC}, v${it.registerD}, v${it.registerE}, v${it.registerF}, v${it.registerG}, ${it.inlineIndex}"
                 is Instruction35ms -> "v${it.registerC}, v${it.registerD}, v${it.registerE}, v${it.registerF}, v${it.registerG}, ${it.vtableIndex}"
-                is Instruction3rc -> "${it.startRegister}, ${it.reference.toStr()}"
+                is Instruction3rc -> "{ ${it.startRegister} }, ${it.reference.toStr()}"
                 is Instruction3rmi -> "${it.startRegister}, ${it.inlineIndex}"
                 is Instruction3rms -> "${it.startRegister}, ${it.vtableIndex}"
                 is Instruction45cc -> "v${it.registerC}, v${it.registerD}, v${it.registerE}, v${it.registerF}, v${it.registerG}}, ${it.reference.toStr()}, ${it.reference2.toStr()}"
@@ -82,44 +82,5 @@ internal fun Iterable<Instruction>.parse(sw: StringBuilder) {
             }
         )
         sw.append("\n")
-    }
-}
-
-internal class InstructionCalculator(
-    instructions: Iterable<Instruction>
-) {
-    private val codeAddressList = mutableListOf<Int>()
-    private var index = 0
-
-    init {
-        var addr = 0
-        for (instruction in instructions) {
-            addr += instruction.codeUnits
-            codeAddressList.add(addr)
-        }
-        val avgCodeUnitsPerInstruction = 1.9f
-        index = (addr / avgCodeUnitsPerInstruction).toInt()
-        val size = instructions.count()
-        if (index >= size) {
-            index = size - 1
-        }
-    }
-
-
-    internal fun mapCodeAddressToRelativeIndex(codeAddress: Int): Int {
-        val guessedLocation: Int = codeAddressList[index]
-        return if (guessedLocation == codeAddress) {
-            index
-        } else if (guessedLocation > codeAddress) {
-            do {
-                index--
-            } while (codeAddressList.elementAt(index) > codeAddress)
-            index
-        } else {
-            do {
-                index++
-            } while (index < codeAddressList.size && codeAddressList.elementAt(index) <= codeAddress)
-            index - 1
-        }
     }
 }
